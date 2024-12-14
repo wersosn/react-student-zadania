@@ -9,7 +9,7 @@ type StudentStateType={
 }
 
 type StudentPropsType={
- 
+  lastIndex: number;
   addFn:(new_student:StudentClass)=>void;
 }
 
@@ -32,17 +32,17 @@ type StudentPropsType={
       }
         
       const addStudent=():void=>{
-        const student=new StudentClass(new_student.name,new_student.surname,new_student.index_nr,new_student.dataUrodzenia);
+        const student=new StudentClass(new_student.name,new_student.surname,props.lastIndex + 1,new_student.dataUrodzenia);
+        console.log(student);
           props.addFn(student);
       }
   
   return (
-    
+  
     <>
     <div>
         Name: <input type='text' name="name" onChange={(e)=>changeValue(e)}/>
         Surname: <input type='text' name="surname" onChange={(e)=>changeValue(e)}/>
-        Index: <input type='number' name="index" onChange={(e)=>changeValue(e)}/>
         Date of birth: <input type='date' name="birthdate" onChange={(e)=>changeValue(e)}/>
         <button onClick={()=>addStudent()}>Add</button>
       </div>

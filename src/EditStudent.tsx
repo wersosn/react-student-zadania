@@ -1,17 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StudentClass } from './types/Student';
-
+import { HashRouter as Router, Route, NavLink, useNavigate, useParams } from 'react-router';
 type StudentPropsType = {
     student: StudentClass;
     saveFn: (updatedStudent: StudentClass) => void;
 }
 
 export default function EditStudent(props:StudentPropsType) : React.ReactElement{ 
-    const [edited_student, changeStudentData] = useState({ name: props.student.Name,
-        surname: props.student.Surname,
-        index_nr: props.student.Index_nr,
-        dataUrodzenia: props.student.dataUrodzenia, });
-
+    const [edited_student, changeStudentData] = useState({ ...props.student.getAsType() });
+    const { indexNr } = useParams();
+    
     const changeValue = (e:React.FormEvent<HTMLInputElement>):void =>{ 
         const { name, value } = e.currentTarget;
         changeStudentData((prev) => ({
