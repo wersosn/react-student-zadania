@@ -16,7 +16,7 @@ export type StudentType={
     public marks:number[];
   
   
-    constructor(private name:string, private surname:string, private index_nr:number, public dataUrodzenia: Date){
+    constructor(public name:string, public surname:string, private index_nr:number, public dataUrodzenia: Date){
       this.dataUrodzenia=dataUrodzenia;
       this.marks=[];
     }
