@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStudentContext } from './StudentContext';
 import { StudentClass } from './types/Student';
+import Students from './Students';
 
 export default function AddStudent() {
   const navigate = useNavigate();
-  const { addNewStudent, lastIndex } = useStudentContext(); // Pobranie funkcji z kontekstu
+  const { addNewStudent, lastIndex } = useStudentContext(); // Pobranie funkcji dodawania studenta z kontekstu
 
-  const [newStudent, setNewStudent] = useState({
+  const [newStudent, setNewStudent] = useState({ // Nowy student - puste pola
     name: '',
     surname: '',
     dataUrodzenia: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Obsługa zmian danych w formularzu
     const { name, value } = e.target;
     setNewStudent((prev) => ({
       ...prev,
@@ -21,7 +22,7 @@ export default function AddStudent() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = () => { // Obsługa formularza - tworzenie nowego studenta
     const student = new StudentClass(
       newStudent.name,
       newStudent.surname,
@@ -29,12 +30,12 @@ export default function AddStudent() {
       new Date(newStudent.dataUrodzenia)
     );
     addNewStudent(student); // Wywołanie funkcji z kontekstu
-    navigate('/'); // Powrót do listy studentów
+    navigate('/');
   };
 
   return (
     <div>
-      <h2>Add Student</h2>
+      <Students />
       <form onSubmit={(e) => e.preventDefault()}>
         <div>
           <label>Name:</label>

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { StudentClass } from './types/Student';
 
-// Typy kontekstu
+// Typy kontekstu - aby nie było oddzielnych dla add, edit itd. -> umożliwia routing
 interface StudentContextType {
   studentList: StudentClass[];
   addNewStudent: (student: StudentClass) => void;
@@ -22,7 +22,7 @@ export const useStudentContext = () => {
   return context;
 };
 
-// Provider kontekstu
+// Provider kontekstu -> komponent udostępnia kontekst 'dzieciom'
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [studentList, updateList] = useState([
     new StudentClass('Ala', 'Makota', 123485, new Date('2000-01-21')),
@@ -30,29 +30,29 @@ export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children })
     new StudentClass('Adrian', 'Duda', 156789, new Date('2001-04-01')),
   ]);
 
-  const [lastIndex, setLastIndex] = useState<number>(
+  const [lastIndex, setLastIndex] = useState<number>( // Wyliczanie kolejnego indeksu
     studentList.length ? studentList[studentList.length - 1].Index_nr : 0
   );
 
-  const addNewStudent = (student: StudentClass) => {
+  const addNewStudent = (student: StudentClass) => { // Dodawanie nowego studenta do listy
     const updatedList = [...studentList, student];
     updateList(updatedList);
     setLastIndex(lastIndex + 1);
   };
 
-  const updateStudent = (updatedStudent: StudentClass) => {
+  const updateStudent = (updatedStudent: StudentClass) => { // Modyfikacja danego studenta na liście
     const updatedList = studentList.map((student) =>
       student.Index_nr === updatedStudent.Index_nr ? updatedStudent : student
     );
     updateList(updatedList);
   };
 
-  const removeStudent = (index_nr: number) => {
+  const removeStudent = (index_nr: number) => { // Usuwanie danego studenta z listy
     const updatedList = studentList.filter((student) => student.Index_nr !== index_nr);
     updateList(updatedList);
   };
 
-  return (
+  return ( // Udostępnienie wartości kontekstu
     <StudentContext.Provider
       value={{
         studentList,

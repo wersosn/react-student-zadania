@@ -1,13 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useStudentContext } from './StudentContext';
 import Student from './Student';
 import DeleteStudent from './DeleteStudent';
 
 export default function Students() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { studentList, removeStudent } = useStudentContext(); // Pobranie danych z kontekstu
 
-  return (
+  return ( // Wyświetlanie listy studentów
     <div>
       <h2>Students List</h2>
       {studentList.length > 0 ? (
@@ -23,7 +24,9 @@ export default function Students() {
       ) : (
         <p>No students stored</p>
       )}
-      <button onClick={() => navigate('/AddStudent')}>Add Student</button>
+      {location.pathname === '/' && (
+        <button onClick={() => navigate('/AddStudent')}>Add Student</button>
+      )}
     </div>
   );
 }

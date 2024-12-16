@@ -2,25 +2,26 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useStudentContext } from './StudentContext';
 import { StudentClass } from './types/Student';
+import Students from './Students';
 
 export default function EditStudent(): React.ReactElement {
   const navigate = useNavigate();
-  const { studentList, updateStudent } = useStudentContext();
-  const [searchParams] = useSearchParams();
+  const { studentList, updateStudent } = useStudentContext(); // Pobieranie danych studentów oraz funkcję aktualizacji z kontekstu
+  const [searchParams] = useSearchParams(); // Hook umożliwiający pobranie parametrów z URL
   const id = parseInt(searchParams.get('id') || '0', 10);
   const studentToEdit = studentList.find((student) => student.Index_nr === id);
-
   const [editedStudent, setEditedStudent] = useState<StudentClass | null>(null);
 
-  useEffect(() => {
+  useEffect(() => { // Ustawienie studenta do edycji (w przypadku braku daty ustawi domyślną, gdyż jej brak powoduje błąd)
     if (studentToEdit) {
-      // Tworzymy nową instancję StudentClass na podstawie znalezionego studenta
       setEditedStudent(
         new StudentClass(
           studentToEdit.name,
           studentToEdit.surname,
           studentToEdit.Index_nr,
-          studentToEdit.dataUrodzenia
+          studentToEdit.dataUrodzenia instanceof Date && !isNaN(studentToEdit.dataUrodzenia.getTime())
+            ? studentToEdit.dataUrodzenia
+            : new Date('2000-01-01') 
         )
       );
     }
@@ -30,30 +31,30 @@ export default function EditStudent(): React.ReactElement {
     return <p>Student not found</p>;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Obsługa zmian danych w formularzu
     const { name, value } = e.target;
     setEditedStudent((prev) =>
       prev
         ? new StudentClass(
-            name === 'name' ? value : prev.name,
-            name === 'surname' ? value : prev.surname,
-            prev.Index_nr,
-            name === 'dataUrodzenia' ? new Date(value) : prev.dataUrodzenia
-          )
+          name === 'name' ? value : prev.name,
+          name === 'surname' ? value : prev.surname,
+          prev.Index_nr,
+          name === 'dataUrodzenia' ? new Date(value) : prev.dataUrodzenia
+        )
         : null
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = () => { // Obsługa formularza - update studenta
     if (editedStudent) {
-      updateStudent(editedStudent); // Aktualizacja danych
+      updateStudent(editedStudent);
       navigate('/');
     }
   };
 
   return (
     <div>
-      <h2>Edit Student</h2>
+      <Students />
       <form onSubmit={(e) => e.preventDefault()}>
         <div>
           <label>Name:</label>

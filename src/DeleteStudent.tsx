@@ -6,7 +6,7 @@ type RemoveStudentProps = {
 };
 
 export default function RemoveStudent({ index_nr, removeFn }: RemoveStudentProps): React.ReactElement {
-    const handleRemove = () => {
+    const handleRemove = () => { // Obsługa usuwania studenta
         if (window.confirm("Czy napewno chcesz usunąć tego studenta z listy?")) {
             removeFn(index_nr);
         }

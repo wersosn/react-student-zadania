@@ -3,6 +3,7 @@ import './App.css';
 import Students from './Students';
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
+import DeleteStudent from './DeleteStudent';
 import { StudentProvider } from './StudentContext';
 
 function App() {
