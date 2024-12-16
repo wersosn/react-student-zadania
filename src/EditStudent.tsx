@@ -12,28 +12,27 @@ export default function EditStudent(): React.ReactElement {
   const studentToEdit = studentList.find((student) => student.Index_nr === id);
   const [editedStudent, setEditedStudent] = useState<StudentClass | null>(null);
 
-  useEffect(() => { // Ustawienie studenta do edycji (w przypadku braku daty ustawi domyślną, gdyż jej brak powoduje błąd)
+  useEffect(() => { // Użycie operatora spread do rozszerzenia obiektu i dodania brakujących właściwości
     if (studentToEdit) {
-      setEditedStudent(
-        new StudentClass(
-          studentToEdit.name,
-          studentToEdit.surname,
-          studentToEdit.Index_nr,
-          studentToEdit.dataUrodzenia instanceof Date && !isNaN(studentToEdit.dataUrodzenia.getTime())
-            ? studentToEdit.dataUrodzenia
-            : new Date('2000-01-01') 
-        )
-      );
+      const editStudent = { // Tworzenie nowego obiektu na podstawie danych z studentToEdit
+        ...studentToEdit,
+        index_nr: studentToEdit.index_nr,
+        Name: studentToEdit.name,
+        Surname: studentToEdit.surname,
+      };
+
+      setEditedStudent(new StudentClass( // Tworzenie nowego StudentClass z zedytowanym studentem
+        editStudent.name,
+        editStudent.surname,
+        editStudent.index_nr,
+        editStudent.dataUrodzenia
+      ));
     }
   }, [studentToEdit]);
 
-  if (!editedStudent) {
-    return <p>Student not found</p>;
-  }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Obsługa zmian danych w formularzu
     const { name, value } = e.target;
-    setEditedStudent((prev) =>
+    setEditedStudent((prev) => // Użycie operatora spread
       prev
         ? new StudentClass(
           name === 'name' ? value : prev.name,
@@ -51,6 +50,10 @@ export default function EditStudent(): React.ReactElement {
       navigate('/');
     }
   };
+
+  if (!editedStudent) { // Obsługa przypadku, gdy edytowany student nie istnieje
+    return <p>Student not found</p>;
+  }
 
   return (
     <div>
